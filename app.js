@@ -1,9 +1,19 @@
 const express = require("express");
-const mainRuoter = require("./routes/index");
-
+const cors = require("cors");
+const bodyParser = require('body-parser');
 const app = express();
-app.get("/api/v1", mainRouter);
+const rootRouter = require("./routes/index")
 
-// app.use("api/v2", v2Router)
+const corsOption = {
+    origin: "frontend_url",
+    method: ["GET", "POST", "PUT", "DELETE"],
+    credential: true
+}
+
+app.use(cors(corsOption));
+app.use(bodyParser.json());
+app.use("/api/v1", rootRouter);
+
+// app.use("api/v2")
 
 app.listen(3000, () => console.log("server running at PORT 3000"));

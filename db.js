@@ -1,31 +1,31 @@
 const mongoose = require("mongoose");
 const { number } = require("zod");
 
-mongoose.connect("URL");
+mongoose.connect("mongodb://localhost:27017/payment-app");
 
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        minLenght: 4,
-        maxLenght: 6
+        // required: true,
+        // unique: true,
+        // lowercase: true,
+        // minLenght: 4,
+        // maxLenght: 20
     },
     password: {
         type: String,
-        required: true,
-        minLenght: 6
+        // required: true,
+        // minLenght: 6
     },
     firstName: {
         type: String,
-        required: true,
-        maxLenght: 50
+        // required: true,
+        // maxLenght: 50
     },
     lastName: {
         type: String,
-        required: true,
-        maxLenght: 50
+        // required: true,
+        // maxLenght: 50
     }
 });
 
