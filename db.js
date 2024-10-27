@@ -6,26 +6,26 @@ mongoose.connect("mongodb://localhost:27017/payment-app");
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
-        // required: true,
-        // unique: true,
-        // lowercase: true,
-        // minLenght: 4,
-        // maxLenght: 20
+        required: true,
+        unique: true,
+        lowercase: true,
+        minLength: 4,
+        maxLength: 20
     },
     password: {
         type: String,
-        // required: true,
-        // minLenght: 6
+        required: true,
+        minLength: 6
     },
     firstName: {
         type: String,
-        // required: true,
-        // maxLenght: 50
+        required: true,
+        maxLength: 50
     },
     lastName: {
         type: String,
-        // required: true,
-        // maxLenght: 50
+        required: true,
+        maxLength: 50
     }
 });
 
