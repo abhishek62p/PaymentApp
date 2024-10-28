@@ -4,8 +4,9 @@ const zod = require("zod");
 const { User, Account } = require("../db");
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config");
-const { authMiddleware } = require("../middleware/middleware")
+const authMiddleware = require("../middleware/middleware");
 const bcrypt = require("bcrypt");
+const accountRouter = require("./account")
 
 const signupBody = zod.object({
     username: zod.string(),
@@ -44,9 +45,8 @@ router.post("/signup", async(req, res) => {
 
         const b = await Account.create({
             userId,
-            balance: 1 + Math.random() * 1000
+            balance: 1 + Math.random() * 10000
         })
-        console.log(b)
         
         const token = jwt.sign({
             userId
@@ -56,7 +56,9 @@ router.post("/signup", async(req, res) => {
             msg: "User Created successfully",
             token: token
         })
-        console.log(`New user created successfully ${user}`)
+        console.log("User created Successfully")
+        console.log(user)
+        console.log(b)
     } catch (error) {
         if (error.name === "ValidationError") {
             return res.status(400).json({
@@ -104,33 +106,37 @@ router.post("/signin", async (req, res) => {
     }
 })
 
-// const updateBody = zod.object({
-//     password: zod.string().optional(),
-//     firstName: zod.string().optional(),
-//     lastName: zod.string().optional()
-// })
+const updateBody = zod.object({
+    password: zod.string().optional(),
+    firstName: zod.string().optional(),
+    lastName: zod.string().optional()
+})
 
-// router.put("/", authMiddleware, async (req, res) => {
-//     const { success } = updateBody.safeParse(req.body)
-//     if(!success) {
-//         res.status(411).json({
-//             msg: "Error while updating information"
-//         })
-//     }
+router.put("/", authMiddleware, async (req, res) => {
+    const { success } = updateBody.safeParse(req.body)
+    if(!success) {
+        res.status(411).json({
+            msg: "Error while updating information"
+        })
+    }
+    console.log("hello")
+    try {
+        await User.updateOne({_id: req.userId}, {
+            $set: req.body
+        })
+        res.json({
+            msg: "Updataed Successfully"
+        });
+        console.log(req.body);
+    } catch (error) {
+        console.log(`Upadate error: ${error}`)
+        res.status(500).json({
+            msg: "Server error while Updating"
+        });
+    }
+});
 
-//     try {
-//         await User.updateOne({ _id: req.userId }, req.body);
-
-//         res.json({
-//             msg: "Updataed Successfully"
-//         });
-//     } catch (error) {
-//         console.log(`Upadate error: ${error}`)
-//         res.status(500).json({
-//             msg: "Server error while Updating"
-//         });
-//     }
-// });
+router.use("/account", accountRouter);
 
 router.get("/bulk", async (req, res) => {
     const filter = req.query.filter || "";
