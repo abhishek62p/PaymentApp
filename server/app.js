@@ -5,7 +5,7 @@ const app = express();
 const rootRouter = require("./routes/index")
 
 const corsOption = {
-    origin: "frontend_url",
+    origin: "http://localhost:5173",
     method: ["GET", "POST", "PUT", "DELETE"],
     credential: true
 }
